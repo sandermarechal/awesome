@@ -18,6 +18,9 @@ require("freedesktop.menu")
 -- Load Debian menu entries
 require("debian.menu")
 
+-- Custom layout
+require("vain.layout.gimp")
+
 -- {{{ Variable definitions
 -- Themes define colours, icons, and wallpapers
 beautiful.init("/usr/share/awesome/themes/default/theme.lua")
@@ -57,7 +60,7 @@ shifty.config.tags = {
     ["dev"] =  { position = 3, exclusive = true, layout = awful.layout.suit.max },
     ["mail"]  = { position = 4, exclusive = true, layout = awful.layout.suit.max },
     ["office"] =  { layout = awful.layout.suit.max, exclusize = true },
-    ["gimp"] = { exclusive = true, mwfact = 0.18 },
+    ["gimp"] = { exclusive = true, mwfact = 0.18, layout = vain.layout.gimp },
     ["files"] = { exclusive = true },
     ["im"] = { exclusive = true, layout = awful.layout.suit.fair },
 }
