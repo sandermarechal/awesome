@@ -72,7 +72,7 @@ shifty.config.apps = {
         { match = { "Gimp" } , tag = "gimp" },
         { match = { "gimp%-image%-window" }, slave = true },
         { match = { "OpenOffice" }, tag = "office", honorsizehints = false },
-        { match = { "Pidgin", "SFLphone" }, tag = "im" },
+        { match = { "Pidgin", "SFLphone", "Empathy" }, tag = "im" },
         { match = { "Nautilus", "File-roller" }, tag = "files" },
         { match = { "" }, buttons = {
                              button({ }, 1, function (c) client.focus = c; c:raise() end),
