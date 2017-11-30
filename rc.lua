@@ -74,7 +74,7 @@ shifty.config.apps = {
         { match = { "gvim" } , tag = "dev", honorsizehints = false },
         { match = { "Gimp" } , tag = "gimp" },
         { match = { "gimp%-image%-window" }, slave = true },
-        { match = { "OpenOffice" }, tag = "office", honorsizehints = false },
+        { match = { "OpenOffice","LibreOffice" }, tag = "office", honorsizehints = false },
         { match = { "Pidgin", "Sflphone", "Empathy" }, tag = "im" },
         { match = { "Nautilus", "File-roller" }, tag = "files" },
         { match = { "" }, buttons = {
@@ -129,6 +129,7 @@ function tag_info()
    v = v .. "<span font_desc=\"Verdana Bold 20\">" .. t.name .. "</span>\n"
    v = v .. tostring(t) .. "\n\n"
    v = v .. "clients: " .. #t:clients() .. "\n\n"
+   naughty.notify{ text = v, timeout = 0, margin = 10 }
 
    local i = 1
    for op, val in pairs(awful.tag.getdata(t)) do
@@ -138,7 +139,7 @@ function tag_info()
       i = i + 1
    end
 
-   naughty.notify{ text = v:sub(1,#v-1), timeout = 0, margin = 10, height = 60 }
+   naughty.notify{ text = v:sub(1,#v-1), timeout = 0, margin = 10 }
 end
 --}}}
 
@@ -248,9 +249,9 @@ menu_items = freedesktop.menu.new()
 table.insert(menu_items, 1, { "Awesome", myawesomemenu })
 table.insert(menu_items, { "Lock screen", "gnome-screensaver-command -l" })
 table.insert(menu_items, { "Logout", "gnome-session-quit --logout" })
-table.insert(menu_items, { "Shutdown", "gnome-session-quit --power-off" })
-table.insert(menu_items[9][2], { "Home", "nautilus /home/sander" })
-table.insert(menu_items[11][2], { "New login", "gdmflexiserver" })
+table.insert(menu_items, { "Shutdown", "dbus-send --system --print-reply --dest=org.freedesktop.login1 /org/freedesktop/login1 'org.freedesktop.login1.Manager.PowerOff' boolean:true" })
+table.insert(menu_items[10][2], { "Home", "nautilus /home/sander" })
+table.insert(menu_items[12][2], { "New login", "gdmflexiserver" })
 
 mymainmenu = awful.menu.new({ items = menu_items, width = 200 })
 mylauncher = awful.widget.launcher({ image = image(beautiful.awesome_icon),
