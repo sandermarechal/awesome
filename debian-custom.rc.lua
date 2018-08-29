@@ -118,6 +118,38 @@ function client_info()
    end
    naughty.notify{ text = v:sub(1,#v-1), timeout = 0, margin = 10 }
 end
+
+-- Modified version of awful.completion.generic that matches mid-string
+function complete(text, cur_pos, ncomp, keywords)
+    -- The keywords table may be empty
+    if #keywords == 0 then
+        return text, #text + 1
+    end
+
+    -- if no text had been typed yet, then we could start cycling around all
+    -- keywords with out filtering and move the cursor at the end of keyword
+    if text == nil or #text == 0 then
+        ncomp = math.fmod(ncomp - 1, #keywords) + 1
+        return keywords[ncomp], #keywords[ncomp] + 2
+    end
+
+    -- Filter out only keywords containing text
+    local matches = {}
+    for _, x in pairs(keywords) do
+        if string.find(x, text, 1, true) then
+            table.insert(matches, x)
+        end
+    end
+
+    -- if there are no matches just leave out with the current text and position
+    if #matches == 0 then
+        return text, #text + 1, matches
+    end
+
+    --  cycle around all matches
+    ncomp = math.fmod(ncomp - 1, #matches) + 1
+    return matches[ncomp], #matches[ncomp] + 1, matches
+end
 -- }}}
 
 -- {{{ Menu
@@ -381,14 +413,14 @@ globalkeys = gears.table.join(
                 prompt = "Project: ",
                 textbox = awful.screen.focused().mypromptbox.widget,
                 exe_callback = function(project)
-                    awful.spawn.with_shell("cd /home/sander/dev/prezent/"..project.." && gvim")
+                    awful.spawn.with_shell("cd /home/sander/dev/"..project.." && gvim")
                 end,
                 completion_callback = function (text, pos, ncomp)
                     local projects = {}
-                    for p in io.popen('find /home/sander/dev/prezent -mindepth 1 -maxdepth 1 -type d -not -path "*/\\.*" -exec basename \\{\\} \\;'):lines() do
+                    for p in io.popen('find /home/sander/dev -mindepth 2 -maxdepth 2 -type d -not -path "*/\\.*" | cut -d"/" -f5-'):lines() do
                         projects[#projects + 1] = p
                     end
-                    return awful.completion.generic(text, pos, ncomp, projects)
+                    return complete(text, pos, ncomp, projects)
                 end,
             }
         end,
